@@ -1,0 +1,11 @@
+# .air.toml (configuração mínima)
+root = "."
+tmp_dir = "tmp"
+
+[build]
+  # Ajuste 'cmd' conforme o path para o main do seu projeto
+  cmd = "go build -o ./tmp/monitor ./cmd/crypto-monitor"
+  bin = "./tmp/monitor"
+  include_ext = ["go"]
+  exclude_dir = ["tmp", "vendor"]
+
