@@ -28,11 +28,11 @@ coins := []string{"bitcoin", "ethereum", "solana"}
 	s.store.Update(prices)
 	
 	// Monta a mensagem com os preços
-	message := "🪙 *Atualização de Preços*\n\n"
+	message := "🪙 <b>Atualização de Preços</b> \n\n"
 	caser := cases.Title(language.English)
 	
 	for coin, price := range prices {
-		message += fmt.Sprintf("*%s*: $%.2f\n", caser.String(coin), price)
+		message += fmt.Sprintf("<b>%s</b>: $%.2f\n", caser.String(coin), price)
 	}
 	
 	// Envia mensagem via Telegram

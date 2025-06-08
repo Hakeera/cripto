@@ -24,6 +24,7 @@ func (t *TelegramClient) SendMessage(message string) error {
 	data := url.Values{}
 	data.Set("chat_id", t.ChatID)
 	data.Set("text", message)
+	data.Set("parse_mode", "HTML")
 
 	resp, err := http.PostForm(apiURL, data)
 	if err != nil {
