@@ -9,23 +9,34 @@ import (
 	"time"
 
 	"github.com/Hakeera/cripto/internal/infra"
+	"github.com/Hakeera/cripto/internal/notifier"
 	"github.com/Hakeera/cripto/internal/usecase"
 	"github.com/Hakeera/cripto/internal/worker"
+
+	"github.com/joho/godotenv"
 )
 
 func main() {
-    // Instancia o Echo (framework web):contentReference[oaicite:19]{index=19}
-    // e := echo.New()
+    // Carrega o .env
+    if err := godotenv.Load(); err != nil {
+        fmt.Println("Erro ao carregar .env:", err)
+    }
 
     fmt.Println("Monitor de preços iniciado (CLI + Echo)")
 
-    // Configura cliente CoinGecko, store em memória e serviço de preços
+    // Inicializa cliente CoinGecko e store em memória
     client := infra.NewCoinGeckoClient()
     store := usecase.NewPriceStore()
     service := usecase.NewPriceService(client, store)
 
-    // Inicia o worker para atualizar preços a cada 10 segundos
-    w := worker.NewPriceWorker(service, 20*time.Second)
+    // Inicializa cliente Telegram
+    telegram := notifier.NewTelegramClient(
+        os.Getenv("TELEGRAM_BOT_TOKEN"),
+        os.Getenv("TELEGRAM_CHAT_ID"),
+    )
+
+    // Inicia o worker para atualizar preços a cada 20 segundos
+    w := worker.NewPriceWorker(service, 20*time.Second, telegram)
     go w.Start()
 
     // Aguarda interrupção (Ctrl+C) para encerrar
@@ -35,4 +46,3 @@ func main() {
     <-quit
     fmt.Println("Encerrando aplicação...")
 }
-
